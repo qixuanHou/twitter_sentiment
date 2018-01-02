@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- excerpted by SB Admin 2 template -->
+    <title> </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/styles/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../static/styles/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/styles/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../static/styles/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="../static/jquery.min.js"></script>
+    <script src="../static/searchPeople.js"></script>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Twitter Dashboard</a>
+            </div>
+            <!-- /.navbar-header -->
+            
+            
+            
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search..." id="searchBar" onkeypress="if(event.keyCode==13){peopleSearch();}">
+                                
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="peopleSearch();">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                          <!--
+                        <li>
+                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                        </li>
+                          -->
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Dashboard For {{output[0]["UserName"]}} <p class="fa fa-twitter"> </p></h1>
+                <div class="useravatar" align ="middle">    
+                    <img alt ="" src = {{output[0]["picUrl"]}}>
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            
+            
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Time Analysis 
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            
+                            <div id="myDiv"></div>
+                            <script>
+                                var trace2 = {
+                              x: {{ X|safe }},
+                              y: {{Y}},
+                              mode: 'lines+markers',
+                              text: {{tweets|safe}}
+                            };
+                            var data = [trace2];
+                            var layout = {
+                          title:'Mood By Time'
+                            };
+                            Plotly.newPlot('myDiv', data, layout);
+                          </script>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-clock-o fa-fw"></i> Twitter Timeline
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul class="timeline">
+                                {% for tweet in topten %}
+                                {% if boolArr[loop.index0] %}
+                                <li>
+                                    <div class="timeline-badge"><i class="fa fa-twitter"></i>
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="timeline-title">Mood Level {{Y[loop.index0]}}</h4>
+                                            <p><small class="text-muted"><i class="fa fa-clock-o"></i> {{hours[loop.index0]}} hours ago via Twitter</small>
+                                            </p>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>{{ tweet|safe }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% else %}
+                                <li class="timeline-inverted">
+                                    <div class="timeline-badge warning"><i class="fa fa-twitter"></i>
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="timeline-title">Mood Level {{Y[loop.index0]}}</h4>
+                                            <p><small class="text-muted"><i class="fa fa-clock-o"></i> {{hours[loop.index0]}} hours ago via Twitter</small></p>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>{{ tweet|safe }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                               
+                            </ul>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    
+                    
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Public Opinions
+                        </div>
+                        <div class="panel-body">
+                            
+                            <!--
+                            <div id="morris-donut-chart"></div>
+                            <a href="#" class="btn btn-default btn-block">View Details</a>
+                        -->
+                            <div id="g1" class="gauge"></div>
+                            <script>
+                            document.addEventListener("DOMContentLoaded", function(event) {
+                                var dflt = {
+                                    min: 0,
+                                    max: 100,
+                                    donut: true,
+                                    gaugeWidthScale: 0.6,
+                                    counter: true,
+                                    hideInnerShadow: true
+                                }
+                                var g1 = new JustGage({
+                                    id: 'g1',
+                                    value: 10,
+                                                      title: 'javascript call',
+                                                      defaults: dflt
+                                                      });
+                                setInterval(
+                                    function()
+                                    {
+                                        url = window.location.href;
+                                        
+                                        userAcc = url.substr(url.lastIndexOf('/') + 1);
+                                        //console.log(userAcc);
+                                        url = "/get_publicopinion/" + userAcc;
+                                        //console.log(url)
+                                        $.getJSON(url, {}, function(number){
+                                            //console.log(number);
+                                            g1.refresh(number)}
+                                                 )
+                                    }, 10000
+                                );
+                            });
+                            </script>
+                            
+                            
+                        </div>
+                    
+                        
+                        <!-- /.panel-body -->
+                    </div>
+                
+
+                    <!-- /.panel -->
+                    <div class="chat-panel panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i> Public Tweets about {{output[0]["UserName"]}}
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-chevron-down"></i>
+                                </button>
+                                
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul class="chat" id="realtimechat">
+                                <script type="text/javascript">
+                                    function please() {
+                                            $("#realtimechat").empty();
+                                            url = window.location.href;
+                                            
+                                            userAcc = url.substr(url.lastIndexOf('/') + 1);
+                                            //console.log(userAcc);
+                                            url = "/get_public_tweet/" + userAcc;
+                                            $.getJSON(url, {}, function(tweet){
+                                                
+                                                numberOfTweets = tweet[0]["size"]
+                                                if (numberOfTweets > 5){
+                                                    numberOfTweets = 5;
+                                                }
+                                                 
+                                                //console.log(numberOfTweets);
+                                            for (var i = 0 ; i < numberOfTweets ; i++){
+                                                var chat = "chat";
+                                                var newchat = chat.concat(i+1);
+                                                var chatname = "chatname";
+                                                var newchatname = chatname.concat(i+1);
+                                                        
+                                                var liItem = document.createElement("li");
+                                                liItem.className = "left clearfix";
+                                                liItem.setAttribute("id", "firstList");
+                                                var spanItem = document.createElement("SPAN");
+                                                spanItem.className = "chat-img pull-left";
+                                                spanItem.setAttribute("id", "span1");
+                                                
+                                                var imgItem = document.createElement("img");
+                                                imgItem.setAttribute("src", "../static/assets/img/default.png");
+                                                spanItem.appendChild(imgItem);
+                                                
+                                                liItem.appendChild(spanItem);
+                                                
+                                                var divItem = document.createElement("div");
+                                                divItem.className = "chat-body clearfix";
+                                                divItem.setAttribute("id", "firstDiv");
+                                                var divhead = document.createElement("div");
+                                                divhead.className = "header";
+                                                divhead.setAttribute("id","headerDiv");                             
+                                                var strgchatname = document.createElement("STRONG");
+                                                strgchatname.className = "primary-font";
+                                                strgchatname.setAttribute("id", newchatname);            
+                                                var newP = document.createElement("p");
+                                                newP.setAttribute("id", newchat);  
+                                                divhead.appendChild(strgchatname);
+                                                divItem.appendChild(divhead);
+                                                divItem.appendChild(newP);
+                                                
+                                                liItem.appendChild(divItem);
+                                                thisUi = document.getElementById("realtimechat")
+                                                thisUi.appendChild(liItem);
+                                                    
+                                                
+                                                $("#"+newchat).text(tweet[i]["tweet"]);
+                                                $("#"+newchatname).text(tweet[i]["senderName"]);
+                                                //$("#"+newtimestamp).text(tweet[i]["senderTimestamp"]);
+                                            }
+                                            });
+                                    }
+                                    please();
+                                    setInterval(please, 10000);
+                                    
+                                    
+                                    
+                                </script>
+                                 
+                             
+                                
+                                
+                            </ul>
+                        </div>
+                        <!-- /.panel-body -->
+                        <!-- /.panel-footer -->
+                    </div>
+                    <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../static/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="../static/raphael.min.js"></script>
+    <script src="../static/morris.min.js"></script>
+    <script src="../static/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../static/raphael-2.1.4.min.js"></script>
+    <script src="../static/justgage.js"></script>
+    
+</body>
+
+</html>
